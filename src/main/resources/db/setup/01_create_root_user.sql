@@ -1,0 +1,3 @@
+CREATE ROLE patience
+    WITH LOGIN ENCRYPTED PASSWORD 'ebank'
+    VALID UNTIL 'infinity'

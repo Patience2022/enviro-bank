@@ -1,0 +1,48 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        ddl.auto: validate
+        temp:
+          use_jdbc_metadata_defaults:false
+        jdbc:
+          lob:
+            non_contextual_creation:true
+
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://localhost:5432/e_bank
+    username: patience
+    password: ebank
+  security:
+    jwt:
+      secret: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"
+    user:
+      name: pat
+      password: 1234
+      roles: admin
+
+  main:
+    allow-circular-references: true
+  mail:
+    host: localhost
+    port: 1025
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connection-timeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+    username: pat
+    password: pat

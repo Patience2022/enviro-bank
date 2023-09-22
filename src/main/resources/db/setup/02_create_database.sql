@@ -1,0 +1,3 @@
+CREATE DATABASE e_bank
+WITH OWNER = patience
+CONNECTION LIMIT = -1
