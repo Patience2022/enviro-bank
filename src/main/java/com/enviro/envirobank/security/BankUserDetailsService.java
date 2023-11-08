@@ -22,12 +22,12 @@ public class BankUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
         BankUser user = bankUserRepo.findByUserNameOrEmail(usernameOrEmail, usernameOrEmail).orElseThrow(
-                ()-> new ResourceNotFoundException("user", "username or eamil", usernameOrEmail)
+                ()-> new ResourceNotFoundException("user", "username or email", usernameOrEmail)
         );
         Set<GrantedAuthority> authorities = user.getUserRoles()
                 .stream()
                 .map(
-                        (role)-> new SimpleGrantedAuthority("ROLE_"+role.getRoleName())
+                        (role)-> new SimpleGrantedAuthority("ROLE_"+role.getName())
                 ).collect(Collectors.toSet());
         return new User(user.getEmail(), user.getPassword().toString(), authorities);
 

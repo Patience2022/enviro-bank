@@ -1,18 +1,23 @@
 package com.enviro.envirobank.service;
 
-import com.enviro.envirobank.dto.PasswordResetRequest;
-import com.enviro.envirobank.model.BankUser;
+import com.enviro.envirobank.dto.CustomerDto;
+import com.enviro.envirobank.dto.ListCustomerDto;
 import com.enviro.envirobank.model.Customer;
+import com.enviro.envirobank.repository.CustomerExp;
+
+import java.util.List;
 
 public interface CustomerService {
-    BankUser createNewCustomer(BankUser customer);
+    Customer createNewCustomer(Customer customer);
 
-    BankUser updateCustomer(BankUser customer);
+    Customer updateCustomer(Customer customer, long id);
 
     Customer getCustomerByIdentityNumber(String customerIdentityNumber);
 
-    BankUser setPassword(String name, String email, String token);
 
-    BankUser resetPassword(PasswordResetRequest request);
-    BankUser returnCustomer(Long id);
+    Customer returnCustomer(Long id);
+
+    List<CustomerExp> getAllCustomers();
+
+    Customer getCustomerUsernameOrEmail(String data);
 }

@@ -1,20 +1,16 @@
 package com.enviro.envirobank.controller;
 
 import com.enviro.envirobank.dto.LoginRequest;
-import com.enviro.envirobank.repository.BankUserRepository;
-import com.enviro.envirobank.security.JwtAuthorizationResponse;
-import com.enviro.envirobank.security.JwtTokenProvider;
+import com.enviro.envirobank.dto.ChangePasswordRequest;
+import com.enviro.envirobank.dto.ResetPasswordRequest;
+import com.enviro.envirobank.dto.JwtAuthorizationResponse;
 import com.enviro.envirobank.service.AuthorizationService;
-import com.enviro.envirobank.service.CustomerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("api/v1/auth")
@@ -22,17 +18,31 @@ import org.springframework.web.bind.annotation.*;
 public class AuthorizationController {
 
     private final AuthorizationService authorizationService;
-    @PostMapping("/login")
-    public JwtAuthorizationResponse authenticateUser(@RequestBody LoginRequest loginRequest){
-        String token = authorizationService.login(loginRequest);
-        JwtAuthorizationResponse authorizationResponse = new JwtAuthorizationResponse();
-        authorizationResponse.setAccessToken(token);
-        return authorizationResponse;
-    }
-//      "http://localhost:8080/api/v1/auth/confirmToken?token="+savedToken;
-    @GetMapping("confirmToken")
-    public String confirmEmail(@RequestParam String name, @RequestParam String token, @RequestParam String email, Model model){
 
-            return "jwtToken";
+
+
+    @PostMapping(path= "/login",consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public JwtAuthorizationResponse authenticateUser(@RequestBody LoginRequest loginRequest){
+        return authorizationService.login(loginRequest);
     }
+
+    @PostMapping(path="/reset-password",consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String>  resetPassword( @RequestBody ResetPasswordRequest request){
+        authorizationService.sendPasswordResetLink(request.getEmailOrUsername());
+        return ResponseEntity.ok("");
+    }
+    @PostMapping(path="change-password",consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String>  changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, @RequestParam String token)
+    {
+        authorizationService.changePassword(changePasswordRequest, token);
+
+        return ResponseEntity.ok("");
+    }
+
+    @PostMapping(path = "update-password",consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest,Principal connectedUser){
+            authorizationService.changePassword(changePasswordRequest, connectedUser);
+        return  ResponseEntity.ok("");
+    }
+
 }

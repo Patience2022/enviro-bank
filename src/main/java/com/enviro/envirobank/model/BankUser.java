@@ -40,7 +40,6 @@ public abstract class BankUser {
     @Column(nullable = false, unique = true)
     private String userName;
 
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_roles_details",

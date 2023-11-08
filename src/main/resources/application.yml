@@ -4,6 +4,9 @@ server:
     include-message: always
     include-binding-errors: always
 spring:
+  batch:
+    job:
+      enabled: false
   jpa:
     show-sql: true
     properties:

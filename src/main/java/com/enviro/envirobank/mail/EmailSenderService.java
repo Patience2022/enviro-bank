@@ -10,6 +10,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 @Service
 @AllArgsConstructor
 public class EmailSenderService implements EmailSender{
@@ -17,38 +22,52 @@ public class EmailSenderService implements EmailSender{
     private final static Logger LOGGER = LoggerFactory
             .getLogger(EmailSenderService.class);
     private final JavaMailSender javaMailSender;
+    private final ThymeleafService thymeleafService;
     @Override
-    @Async
-    public void sendEmail(String to, String email) {
+    public void sendResetPasswordLink(String name, String link, String email) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setText(email, true);
-            helper.setTo(to);
-            helper.setSubject("Confirm email address");
-            helper.setFrom("patcele87@gmail.com");
+            MimeMessageHelper helper = new MimeMessageHelper(
+                    mimeMessage,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    StandardCharsets.UTF_8.name());
+            helper.setSubject("Reset Password");
+            helper.setTo(email);
+            helper.setFrom("patience@gmail.com");
+            Map<String, Object>variables = new HashMap<>();
+            variables.put("name", name);
+            variables.put("link", link);
+
+            helper.setText(thymeleafService.createContent("changePassword.html",variables), true);
             javaMailSender.send(mimeMessage);
-        }
-        catch (MessagingException me){
-            LOGGER.error("Failed to send email ",me);
-            throw new IllegalStateException("Failed to send email");
-        }
-    }
 
-    public String buildEmail(String name, String link, String password){
-   return "<div " +
-                "            <p >Hi " + name + "," +
-           "</p><p > Thank you for registering." + "<br/>"+
-           " Please click on the below link to activate your account: " +
-           "Please reset your password. Temp password is:  "+password+". Please use your email address as username"+
-           " </p><p > <a href=\"" + link + "\">Activate Now</a> </p> Link will expire in 24 hours. <p>See you soon</p>" +
-
-                "</div></div>";
+        }catch (Exception e){
+            throw new RuntimeException( e.getMessage());
+        }
     }
 
     @Override
-    public void sendNewEmail(String name, String to, String email) {
+    public void sendPassword(String firstName, String password, String email) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(
+                    mimeMessage,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    StandardCharsets.UTF_8.name());
+            helper.setSubject("Account confirmation");
+            helper.setTo(email);
+            helper.setFrom("patience@gmail.com");
+            Map<String, Object>variables = new HashMap<>();
+            variables.put("name", firstName);
+            variables.put("pass", password);
+            helper.setText(thymeleafService.createContent("sendPassword.html",variables), true);
+            javaMailSender.send(mimeMessage);
+
+        }catch (Exception e){
+            throw new RuntimeException( e.getMessage());
+        }
 
     }
+
 
 }

@@ -2,5 +2,5 @@
 CREATE TABLE IF NOT EXISTS user_roles
 (
     id SERIAL PRIMARY KEY NOT NULL ,
-    role_name  VARCHAR NOT NULL
+    name  VARCHAR NOT NULL UNIQUE
 );

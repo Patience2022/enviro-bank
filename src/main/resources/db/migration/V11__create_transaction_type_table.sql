@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS transaction_types
+(
+    id SERIAL NOT NULL PRIMARY KEY ,
+    name VARCHAR(50) NOT NULL UNIQUE
+);

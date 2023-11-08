@@ -1,6 +1,7 @@
 package com.enviro.envirobank.dto;
 
 import com.enviro.envirobank.model.UserRole;
+import com.enviro.envirobank.utils.ValidateId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,20 +27,18 @@ public class BankUserDto
     @NotBlank(message = "Please enter your last name")
     private String lastName;
     @NotBlank(message = "Please enter your identity number")
-    @Pattern(regexp = "^[0-9]{13}$",message = "Please enter a valid identity number with 13 digits")
+//    @ValidateId(message = "Please enter a valid SA id number with 13 digits")
     private String identityNumber;
     @NotBlank(message = "Phone number can not be empty")
-    @Pattern(message = "Please enter a valid phone number without country code",regexp = "^0[0-9]{9}$")
+    @Pattern(regexp = "^0[0-9]{9}$", message="Please enter a valid phone number")
     private String phoneNumber;
     @NotBlank
     @Email
     private String email;
-
-    @NotBlank(message = "Please choose a username")
-    private String userRoles;
+    private String userRolesName;
     private String userName;
-    private boolean locked = true;
-    private boolean enabled =false;
+    private boolean locked =false;
+    private boolean enabled = true;
 }
 
 

@@ -1,9 +1,11 @@
 package com.enviro.envirobank.security;
 
+import com.enviro.envirobank.utils.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,9 +19,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
     @Override
     protected void doFilterInternal(

@@ -2,10 +2,7 @@ package com.enviro.envirobank.controller;
 
 import com.enviro.envirobank.dto.AdminDto;
 import com.enviro.envirobank.model.Admin;
-
-
 import com.enviro.envirobank.model.UserRole;
-import com.enviro.envirobank.repository.CustomerRepository;
 import com.enviro.envirobank.service.AdminService;
 import com.enviro.envirobank.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +21,14 @@ public class AdminController {
     private final UserRoleService roleService;
 
 
-    @PostMapping
+    @PostMapping("create-admin")
     public AdminDto createAdmin(@RequestBody AdminDto adminDto){
         Admin admin = modelMapper.map(adminDto, Admin.class);
-        UserRole userRole = roleService.getUserRole(adminDto.getUserRoles());
+        UserRole userRole = roleService.getUserRole(adminDto.getUserRolesName());
         Set<UserRole> roles = new HashSet<>();
         roles.add(userRole);
         admin.setUserRoles(roles);
-        AdminDto savedAdmin = modelMapper.map(adminService.createAdmin(admin), AdminDto.class);
-        return savedAdmin;
+        return modelMapper.map(adminService.createAdmin(admin), AdminDto.class);
     }
 
     @GetMapping("{id}")

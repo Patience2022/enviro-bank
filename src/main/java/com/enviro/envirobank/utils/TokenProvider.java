@@ -1,10 +1,9 @@
-package com.enviro.envirobank.security;
+package com.enviro.envirobank.utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +11,7 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
-public class JwtTokenProvider {
+public class TokenProvider {
 
     @Value("8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918")
 
@@ -40,10 +39,8 @@ public class JwtTokenProvider {
             return true;
         }
         catch (ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException | MalformedJwtException e){
-            e.getMessage();
+            throw new RuntimeException(e.getMessage());
         }
-
-        return false;
     }
 
 //    Fetching username from the Token
@@ -53,5 +50,13 @@ public class JwtTokenProvider {
                 .build()
                 .parseClaimsJws(token).getBody();
         return claims.getSubject();
+    }
+
+    public  String resetPasswordToken(String email){
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis()+1000*60))
+                .signWith(key()).compact();
     }
 }

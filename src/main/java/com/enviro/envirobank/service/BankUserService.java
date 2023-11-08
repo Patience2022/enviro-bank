@@ -1,7 +1,9 @@
 package com.enviro.envirobank.service;
 
+import com.enviro.envirobank.dto.ChangePasswordRequest;
 import com.enviro.envirobank.model.BankUser;
 
 public interface BankUserService {
-    BankUser getBankUser(Long id);
+ String id(String username);
+  BankUser findByUsernameOremail(String username);
 }
