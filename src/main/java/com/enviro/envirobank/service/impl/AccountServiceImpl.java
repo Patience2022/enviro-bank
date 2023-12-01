@@ -49,6 +49,16 @@ public class AccountServiceImpl implements AccountService {
             if (account.getAmountAvailable().compareTo(amountToWithdraw) >= 0) {
                 account.setBalance(account.getBalance().subtract(amountToWithdraw));
                 account.setAmountAvailable(account.getAmountAvailable().subtract(amountToWithdraw));
+
+                Transaction transaction = new Transaction();
+                transaction.setAccount(account);
+                transaction.setDate(Timestamp.valueOf(LocalDateTime.now()));
+                transaction.setDestination(account.getAccountNumber());
+                transaction.setTransactionType(transactionTypeService.findTransactionTypeByName("Withdrawal"));
+                transaction.setAmount(amountToWithdraw);
+                transaction.setDescription("Withdrawal");
+                transactionService.addTransaction(transaction);
+
                 accountRepository.save(account);
             } else {
                 throw new RuntimeException("You have insufficient balance to perform this operation." +
